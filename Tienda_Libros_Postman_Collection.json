@@ -1,0 +1,150 @@
+{
+  "info": {
+    "_postman_id": "7b8e7f4c-4f3e-4a4c-9e7c-tienda-libros-2026",
+    "name": "Tienda de Libros Virtual - API REST",
+    "description": "Colección basada en el proyecto Gusano de Biblioteca / Tienda de Libros Virtual.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "libroId",
+      "value": "1"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Crear libro",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"titulo\": \"El Principito\",\n  \"autor\": \"Antoine de Saint-Exupéry\",\n  \"precio\": 30.00,\n  \"stock\": 15,\n  \"categoriaId\": 1\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/libros",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "libros"
+          ]
+        }
+      }
+    },
+    {
+      "name": "2. Listar libros",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/libros",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "libros"
+          ]
+        }
+      }
+    },
+    {
+      "name": "3. Obtener libro por ID",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/libros/{{libroId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "libros",
+            "{{libroId}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "4. Modificar libro",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"titulo\": \"El Principito - Edición Especial\",\n  \"autor\": \"Antoine de Saint-Exupéry\",\n  \"precio\": 35.00,\n  \"stock\": 12,\n  \"categoriaId\": 1\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/libros/{{libroId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "libros",
+            "{{libroId}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "5. Eliminar libro",
+      "request": {
+        "method": "DELETE",
+        "url": {
+          "raw": "{{baseUrl}}/api/libros/{{libroId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "libros",
+            "{{libroId}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "6. Error 404 - libro inexistente",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/libros/999",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "libros",
+            "999"
+          ]
+        }
+      }
+    }
+  ]
+}
