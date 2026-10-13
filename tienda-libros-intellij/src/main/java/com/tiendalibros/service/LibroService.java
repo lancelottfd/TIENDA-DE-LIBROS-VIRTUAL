@@ -1,3 +1,4 @@
+
 package com.tiendalibros.service;
 
 import com.tiendalibros.model.Libro;
@@ -8,6 +9,7 @@ import java.util.List;
 
 @Service
 public class LibroService {
+
     private final LibroRepository repository;
 
     public LibroService(LibroRepository repository) {
@@ -15,27 +17,34 @@ public class LibroService {
     }
 
     public Libro crear(Libro libro) {
-        return repository.guardar(libro);
+        libro.setId(null);
+        return repository.save(libro);
     }
 
     public List<Libro> listar() {
-        return repository.listar();
+        return repository.findAll();
     }
 
     public Libro obtenerPorId(Long id) {
-        return repository.buscarPorId(id)
-                .orElseThrow(() -> new RuntimeException("Libro no encontrado"));
+        return repository.findById(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Libro no encontrado"));
     }
 
-    public Libro actualizar(Long id, Libro libro) {
-        return repository.actualizar(id, libro)
-                .orElseThrow(() -> new RuntimeException("Libro no encontrado"));
+    public Libro actualizar(Long id, Libro datos) {
+        Libro libro = obtenerPorId(id);
+
+        libro.setTitulo(datos.getTitulo());
+        libro.setAutor(datos.getAutor());
+        libro.setPrecio(datos.getPrecio());
+        libro.setStock(datos.getStock());
+        libro.setCategoriaId(datos.getCategoriaId());
+
+        return repository.save(libro);
     }
 
     public void eliminar(Long id) {
-        boolean eliminado = repository.eliminar(id);
-        if (!eliminado) {
-            throw new RuntimeException("Libro no encontrado");
-        }
+        Libro libro = obtenerPorId(id);
+        repository.delete(libro);
     }
 }

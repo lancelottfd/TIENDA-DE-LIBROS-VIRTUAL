@@ -1,11 +1,24 @@
+
 package com.tiendalibros.model;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "libros")
 public class Libro {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
     private String titulo;
+
     private String autor;
     private Double precio;
     private Integer stock;
+
+    @Column(name = "categoria_id")
     private Long categoriaId;
 
     public Libro() {
@@ -37,5 +50,8 @@ public class Libro {
     public void setStock(Integer stock) { this.stock = stock; }
 
     public Long getCategoriaId() { return categoriaId; }
-    public void setCategoriaId(Long categoriaId) { this.categoriaId = categoriaId; }
+    public void setCategoriaId(Long categoriaId) {
+        this.categoriaId = categoriaId;
+    }
 }
+
