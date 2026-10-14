@@ -1,10 +1,13 @@
 package com.tiendalibros.controller;
 
+import com.tiendalibros.model.MovimientoInventario;
 import com.tiendalibros.model.Libro;
 import com.tiendalibros.service.LibroService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.*;
 
@@ -61,5 +64,18 @@ public class LibroController {
 
         return ResponseEntity.ok(libros);
     }
+
+
+    @PostMapping("/{id}/salida")
+    public ResponseEntity<MovimientoInventario> registrarSalida(
+            @PathVariable Long id,
+            @RequestParam Integer cantidad) {
+
+        MovimientoInventario movimiento =
+                service.registrarSalida(id, cantidad);
+
+        return ResponseEntity.status(201).body(movimiento);
+    }
+
 
 }

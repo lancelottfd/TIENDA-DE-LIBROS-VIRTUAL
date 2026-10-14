@@ -1,59 +1,77 @@
+
 package com.tiendalibros.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tiendalibros.exception.GlobalExceptionHandler;
 import com.tiendalibros.model.Libro;
 import com.tiendalibros.repository.LibroRepository;
+import com.tiendalibros.repository.MovimientoInventarioRepository;
 import com.tiendalibros.service.LibroService;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import java.util.Optional;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 class LibroControllerTest {
+
     private MockMvc mockMvc;
-    private ObjectMapper objectMapper;
+    private LibroRepository libroRepository;
 
     @BeforeEach
     void setUp() {
-        LibroRepository repository = new LibroRepository();
-        LibroService service = new LibroService(repository);
+
+        libroRepository = mock(LibroRepository.class);
+
+        MovimientoInventarioRepository movimientoRepository =
+                mock(MovimientoInventarioRepository.class);
+
+        LibroService service = new LibroService(
+                libroRepository, movimientoRepository
+        );
+
         LibroController controller = new LibroController(service);
 
         mockMvc = MockMvcBuilders
                 .standaloneSetup(controller)
-                .setControllerAdvice(new com.tiendalibros.exception.GlobalExceptionHandler())
+                .setControllerAdvice(new GlobalExceptionHandler())
                 .build();
-
-        objectMapper = new ObjectMapper();
     }
 
     @Test
-    void postDebeCrearLibro() throws Exception {
+    void debeCrearLibroCon201() throws Exception {
+
         Libro libro = new Libro(
-                null,
-                "Cien años de soledad",
+                1L, "Cien años de soledad",
                 "Gabriel García Márquez",
-                45.0,
-                10,
-                1L
+                45.0, 10, 1L
         );
 
-        mockMvc.perform(
-                post("/api/libros")
+        when(libroRepository.save(any(Libro.class)))
+                .thenReturn(libro);
+
+        mockMvc.perform(post("/api/libros")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(libro))
-        ).andExpect(status().isCreated());
+                        .content(new ObjectMapper().writeValueAsString(libro)))
+                .andExpect(status().isCreated());
     }
 
     @Test
-    void getDebeRetornar404CuandoLibroNoExiste() throws Exception {
-        mockMvc.perform(
-                get("/api/libros/999")
-        ).andExpect(status().isNotFound());
+    void debeRetornar404CuandoLibroNoExiste() throws Exception {
+
+        when(libroRepository.findById(999L))
+                .thenReturn(Optional.empty());
+
+        mockMvc.perform(get("/api/libros/999"))
+                .andExpect(status().isNotFound());
     }
 }
