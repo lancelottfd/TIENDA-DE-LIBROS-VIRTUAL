@@ -33,3 +33,13 @@ public class GlobalExceptionHandler {
     }
 }
 
+    // Credenciales incorrectas en /api/auth/login -> 401 (sin esto caería en el
+    // handler de RuntimeException y respondería 500)
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<Map<String, String>> manejarCredencialesInvalidas(
+            AuthenticationException ex) {
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(Map.of("mensaje", "Usuario o contraseña incorrectos"));
+    }
+}
