@@ -1,4 +1,4 @@
-# tienda-libros
+# Gestión de Inventario
 
 API REST con Spring Boot 3.5.5, Java 17, MySQL, Spring Security y JWT.
 
