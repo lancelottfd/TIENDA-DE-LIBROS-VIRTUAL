@@ -4,6 +4,8 @@ import com.tiendalibros.model.Libro;
 import com.tiendalibros.service.LibroService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -45,4 +47,19 @@ public class LibroController {
         service.eliminar(id);
         return ResponseEntity.noContent().build();
     }
+
+
+    @GetMapping("/stock-bajo")
+    public ResponseEntity<List<Libro>> buscarStockBajo(
+            @RequestParam Integer cantidad) {
+
+        if (cantidad < 0) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        List<Libro> libros = service.buscarLibrosConStockBajo(cantidad);
+
+        return ResponseEntity.ok(libros);
+    }
+
 }

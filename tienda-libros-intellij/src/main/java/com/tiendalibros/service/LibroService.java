@@ -47,4 +47,9 @@ public class LibroService {
         Libro libro = obtenerPorId(id);
         repository.delete(libro);
     }
+
+    public List<Libro> buscarLibrosConStockBajo(Integer cantidad) {
+        return repository.buscarLibrosConStockBajo(cantidad);
+    }
+
 }
