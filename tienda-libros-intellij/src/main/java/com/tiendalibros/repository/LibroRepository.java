@@ -1,4 +1,3 @@
-
 package com.tiendalibros.repository;
 
 import com.tiendalibros.model.Libro;
@@ -10,8 +9,11 @@ import java.util.List;
 
 public interface LibroRepository extends JpaRepository<Libro, Long> {
 
+    boolean existsByIsbn(String isbn);
+
+    boolean existsByIsbnAndIdNot(String isbn, Long id);
+
     @Query("SELECT l FROM Libro l WHERE l.stock < :cantidad")
     List<Libro> buscarLibrosConStockBajo(@Param("cantidad") Integer cantidad);
 
 }
-
