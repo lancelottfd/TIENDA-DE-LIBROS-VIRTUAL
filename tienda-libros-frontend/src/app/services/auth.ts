@@ -67,8 +67,6 @@ export class Auth {
       return null;
     }
   }
-
-  /** Lee el campo "exp" del JWT (sin verificar la firma: eso lo hace el backend). */
   private tokenExpirado(token: string): boolean {
     try {
       const payload = JSON.parse(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
