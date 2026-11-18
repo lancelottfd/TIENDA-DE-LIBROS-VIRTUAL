@@ -1,6 +1,8 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { Auth } from '../../services/auth';
+import { describirError } from '../../utils/http-error';
 
 @Component({
   selector: 'app-login',
@@ -11,8 +13,14 @@ import { RouterLink } from '@angular/router';
 })
 export class Login {
   private fb = inject(FormBuilder);
+  private auth = inject(Auth);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
 
-  loginForm = this.fb.group({
+  enviando = signal(false);
+  errorServidor = signal<string | null>(null);
+
+  loginForm = this.fb.nonNullable.group({
     username: ['', [Validators.required, Validators.minLength(4)]],
     password: ['', [Validators.required, Validators.minLength(6)]],
   });
@@ -22,6 +30,19 @@ export class Login {
       this.loginForm.markAllAsTouched();
       return;
     }
-    console.log('Datos válidos de Login:', this.loginForm.value);
+
+    this.enviando.set(true);
+    this.errorServidor.set(null);
+
+    this.auth.login(this.loginForm.getRawValue()).subscribe({
+      next: () => {
+        const destino = this.route.snapshot.queryParamMap.get('returnUrl') ?? '/libros';
+        this.router.navigateByUrl(destino);
+      },
+      error: (err) => {
+        this.enviando.set(false);
+        this.errorServidor.set(describirError(err, true).mensaje);
+      },
+    });
   }
 }
