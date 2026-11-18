@@ -1,3 +1,28 @@
+# Tienda de Libros – Frontend (Angular)
+
+Cliente web de la API REST de Spring Boot (`tienda-libros-intellij`).
+
+## Autenticación con JWT
+
+- **Login / registro:** `/login` y `/register` llaman a `POST /api/auth/login` y `/api/auth/register`.
+- **Sesión:** `services/auth.ts` guarda el JWT (y rol/usuario) en un signal y en `localStorage` (`tienda-libros-sesion`); si el token ya expiró no se restaura.
+- **Envío del JWT:** `interceptors/auth-interceptor.ts` agrega `Authorization: Bearer <token>` a toda solicitud a `http://localhost:8080/api` (excepto `/api/auth/*`). Ante un `401` cierra la sesión y vuelve al login.
+- **Rutas protegidas:** `guards/auth-guard.ts` (`authGuard`: requiere sesión; `adminGuard`: solo rol ADMIN para crear/editar libros).
+- **Interfaz por rol:** el CLIENTE solo ve el catálogo y "Comprar"; el ADMIN ve además crear, editar y eliminar.
+
+Usuarios de prueba: `admin / admin123` (ADMIN) y `cliente / cliente123` (CLIENTE).
+
+## Cómo ejecutarlo
+
+1. Levantar MySQL y el backend (puerto 8080).
+2. En esta carpeta: `npm install` y luego `npm start` → http://localhost:4200
+3. Pruebas: `npm test`
+
+La guía de demostración completa (Angular → backend → base de datos) está en
+[`../docs/EVIDENCIA_END_TO_END.md`](../docs/EVIDENCIA_END_TO_END.md).
+
+---
+
 # TiendaLibrosFrontend
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.13.
