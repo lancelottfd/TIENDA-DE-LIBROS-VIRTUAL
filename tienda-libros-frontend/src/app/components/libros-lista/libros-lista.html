@@ -1,1 +1,91 @@
-<p>libros-lista works!</p>
+<div class="encabezado-pagina">
+  <h2>Catálogo de libros</h2>
+  <div class="acciones">
+    <input
+      type="search"
+      class="buscador"
+      placeholder="Buscar por título, autor o ISBN"
+      [value]="busqueda()"
+      (input)="busqueda.set($any($event.target).value)"
+    />
+    <a routerLink="/libros/nuevo" class="btn">+ Nuevo libro</a>
+  </div>
+</div>
+
+@if (cargando()) {
+  <p class="estado">Cargando libros...</p>
+} @else if (errorCarga()) {
+  <div class="alerta alerta-error">
+    No se pudo cargar el catálogo.
+    <button type="button" class="btn btn-secundario btn-chico" (click)="cargar()">Reintentar</button>
+  </div>
+} @else if (librosFiltrados().length === 0) {
+  <p class="estado">
+    @if (libros().length === 0) {
+      Aún no hay libros registrados.
+    } @else {
+      Ningún libro coincide con la búsqueda.
+    }
+  </p>
+} @else {
+  <div class="tabla-scroll">
+    <table class="tabla">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Título</th>
+          <th>Autor</th>
+          <th>ISBN</th>
+          <th class="num">Precio (S/)</th>
+          <th class="num">Stock</th>
+          <th>Comprar</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (libro of librosFiltrados(); track libro.id) {
+          <tr>
+            <td>{{ libro.id }}</td>
+            <td>{{ libro.titulo }}</td>
+            <td>{{ libro.autor }}</td>
+            <td>{{ libro.isbn ?? '—' }}</td>
+            <td class="num">{{ libro.precio.toFixed(2) }}</td>
+            <td class="num">
+              <span [class.stock-bajo]="libro.stock < 5">{{ libro.stock }}</span>
+            </td>
+            <td class="celda-compra">
+              <input
+                type="number"
+                min="1"
+                class="input-cantidad"
+                [value]="cantidadDe(libro)"
+                (input)="cambiarCantidad(libro, $any($event.target).value)"
+                [attr.aria-label]="'Cantidad de ' + libro.titulo"
+              />
+              <button
+                type="button"
+                class="btn btn-chico"
+                [disabled]="procesandoId() === libro.id"
+                (click)="registrarSalida(libro)"
+              >
+                Comprar
+              </button>
+            </td>
+            <td class="celda-acciones">
+              <a [routerLink]="['/libros/editar', libro.id]" class="btn btn-secundario btn-chico">Editar</a>
+              <button
+                type="button"
+                class="btn btn-peligro btn-chico"
+                [disabled]="procesandoId() === libro.id"
+                (click)="eliminar(libro)"
+              >
+                Eliminar
+              </button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+}
+
