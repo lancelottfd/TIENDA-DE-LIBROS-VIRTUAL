@@ -3,7 +3,9 @@
 
   @if (auth.estaLogueado()) {
     <a routerLink="/libros" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Catálogo</a>
-    <a routerLink="/libros/nuevo" routerLinkActive="active">Nuevo Libro</a>
+    @if (auth.esAdmin()) {
+      <a routerLink="/libros/nuevo" routerLinkActive="active">Nuevo Libro</a>
+    }
 
     <span class="navbar-espacio"></span>
     <span class="navbar-usuario">
