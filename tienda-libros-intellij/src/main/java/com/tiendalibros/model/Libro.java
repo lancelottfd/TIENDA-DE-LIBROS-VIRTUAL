@@ -2,6 +2,10 @@
 package com.tiendalibros.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
 @Entity
 @Table(name = "libros")
@@ -11,11 +15,22 @@ public class Libro {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "El título es obligatorio")
     @Column(nullable = false)
     private String titulo;
 
+    @NotBlank(message = "El autor es obligatorio")
     private String autor;
+
+    @Column(unique = true)
+    private String isbn;
+
+    @NotNull(message = "El precio es obligatorio")
+    @Positive(message = "El precio debe ser mayor a 0")
     private Double precio;
+
+    @NotNull(message = "El stock es obligatorio")
+    @Min(value = 0, message = "El stock no puede ser negativo")
     private Integer stock;
 
     @Column(name = "categoria_id")
@@ -42,6 +57,9 @@ public class Libro {
 
     public String getAutor() { return autor; }
     public void setAutor(String autor) { this.autor = autor; }
+
+    public String getIsbn() { return isbn; }
+    public void setIsbn(String isbn) { this.isbn = isbn; }
 
     public Double getPrecio() { return precio; }
     public void setPrecio(Double precio) { this.precio = precio; }
