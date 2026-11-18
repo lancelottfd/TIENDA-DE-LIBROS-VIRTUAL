@@ -3,6 +3,7 @@ package com.tiendalibros.controller;
 import com.tiendalibros.model.MovimientoInventario;
 import com.tiendalibros.model.Libro;
 import com.tiendalibros.service.LibroService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,7 +24,7 @@ public class LibroController {
     }
 
     @PostMapping
-    public ResponseEntity<Libro> crear(@RequestBody Libro libro) {
+    public ResponseEntity<Libro> crear(@Valid @RequestBody Libro libro) {
         Libro nuevoLibro = service.crear(libro);
         return ResponseEntity.status(HttpStatus.CREATED).body(nuevoLibro);
     }
@@ -41,7 +42,7 @@ public class LibroController {
     @PutMapping("/{id}")
     public ResponseEntity<Libro> actualizar(
             @PathVariable Long id,
-            @RequestBody Libro libro) {
+            @Valid @RequestBody Libro libro) {
         return ResponseEntity.ok(service.actualizar(id, libro));
     }
 
