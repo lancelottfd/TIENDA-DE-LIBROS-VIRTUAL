@@ -1,6 +1,7 @@
 
 package com.tiendalibros.service;
 
+import com.tiendalibros.exception.ConflictoException;
 import com.tiendalibros.model.Libro;
 import com.tiendalibros.repository.LibroRepository;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,10 @@ public class LibroService {
 
     public Libro crear(Libro libro) {
         libro.setId(null);
+        if (libro.getIsbn() != null && !libro.getIsbn().isBlank()
+                && repository.existsByIsbn(libro.getIsbn())) {
+            throw new ConflictoException("Ya existe un libro con el ISBN " + libro.getIsbn());
+        }
         return repository.save(libro);
     }
 
@@ -43,6 +48,12 @@ public class LibroService {
     public Libro actualizar(Long id, Libro datos) {
         Libro libro = obtenerPorId(id);
 
+        if (datos.getIsbn() != null && !datos.getIsbn().isBlank()
+                && repository.existsByIsbnAndIdNot(datos.getIsbn(), id)) {
+            throw new ConflictoException("Ya existe un libro con el ISBN " + datos.getIsbn());
+        }
+
+        libro.setIsbn(datos.getIsbn());
         libro.setTitulo(datos.getTitulo());
         libro.setAutor(datos.getAutor());
         libro.setPrecio(datos.getPrecio());
