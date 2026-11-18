@@ -8,7 +8,9 @@
       [value]="busqueda()"
       (input)="busqueda.set($any($event.target).value)"
     />
-    <a routerLink="/libros/nuevo" class="btn">+ Nuevo libro</a>
+    @if (auth.esAdmin()) {
+      <a routerLink="/libros/nuevo" class="btn">+ Nuevo libro</a>
+    }
   </div>
 </div>
 
@@ -39,7 +41,9 @@
           <th class="num">Precio (S/)</th>
           <th class="num">Stock</th>
           <th>Comprar</th>
-          <th>Acciones</th>
+          @if (auth.esAdmin()) {
+            <th>Acciones</th>
+          }
         </tr>
       </thead>
       <tbody>
@@ -71,17 +75,19 @@
                 Comprar
               </button>
             </td>
-            <td class="celda-acciones">
-              <a [routerLink]="['/libros/editar', libro.id]" class="btn btn-secundario btn-chico">Editar</a>
-              <button
-                type="button"
-                class="btn btn-peligro btn-chico"
-                [disabled]="procesandoId() === libro.id"
-                (click)="eliminar(libro)"
-              >
-                Eliminar
-              </button>
-            </td>
+            @if (auth.esAdmin()) {
+              <td class="celda-acciones">
+                <a [routerLink]="['/libros/editar', libro.id]" class="btn btn-secundario btn-chico">Editar</a>
+                <button
+                  type="button"
+                  class="btn btn-peligro btn-chico"
+                  [disabled]="procesandoId() === libro.id"
+                  (click)="eliminar(libro)"
+                >
+                  Eliminar
+                </button>
+              </td>
+            }
           </tr>
         }
       </tbody>
