@@ -6,12 +6,6 @@ import { Auth } from '../services/auth';
 import { Notificacion } from '../services/notificacion';
 import { describirError } from '../utils/http-error';
 
-/**
- * 1) Envía el JWT (Authorization: Bearer ...) en las solicitudes protegidas.
- * 2) Muestra un aviso con el error HTTP adecuado (400, 401, 403, 404, 409, 5xx).
- * 3) Ante un 401 en una ruta protegida cierra la sesión y lleva al login.
- * Las rutas /auth/** no se tocan: login y registro muestran su propio error.
- */
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const auth = inject(Auth);
   const notificacion = inject(Notificacion);
