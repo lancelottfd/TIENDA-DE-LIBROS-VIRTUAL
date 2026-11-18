@@ -1,7 +1,19 @@
-<nav style="display: flex; gap: 16px; padding: 12px 20px; border-bottom: 1px solid #ccc;">
-  <strong>Tienda de Libros</strong>
-  <a routerLink="/libros" routerLinkActive="active">Catálogo</a>
-  <a routerLink="/libros/nuevo" routerLinkActive="active">Nuevo Libro</a>
-  <a routerLink="/login" routerLinkActive="active">Iniciar Sesión</a>
-  <a routerLink="/register" routerLinkActive="active">Registrarse</a>
+<nav class="navbar">
+  <strong class="navbar-marca">📚 Tienda de Libros</strong>
+
+  @if (auth.estaLogueado()) {
+    <a routerLink="/libros" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Catálogo</a>
+    <a routerLink="/libros/nuevo" routerLinkActive="active">Nuevo Libro</a>
+
+    <span class="navbar-espacio"></span>
+    <span class="navbar-usuario">
+      {{ auth.username() }}
+      <span class="badge" [class.badge-admin]="auth.esAdmin()">{{ auth.sesion()?.rol }}</span>
+    </span>
+    <button type="button" class="btn btn-secundario btn-chico" (click)="auth.logout()">Cerrar sesión</button>
+  } @else {
+    <span class="navbar-espacio"></span>
+    <a routerLink="/login" routerLinkActive="active">Iniciar Sesión</a>
+    <a routerLink="/register" routerLinkActive="active">Registrarse</a>
+  }
 </nav>
